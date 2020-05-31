@@ -16,15 +16,20 @@ const (
 )
 
 func main() {
+	// Starts server
 	server := gin.Default()
 
 	// Adding Middleware, will be used in all below routes
 	server.Use(middlewares.CheckStatusDB)
 
-	server.GET("/languages", controllers.FindAll)
+	// Set all API endpoints
+	server.GET("/languages/list", controllers.ListLanguages)
+	server.POST("/languages/new", controllers.CreateLanguage)
 
+	// Runs server so it listens for requests...
 	server.Run()
 
+	// Checks DB connection at start
 	if !models.CheckMongoDBConnection() {
 		log.Fatal("Error connecting with MongoDB")
 	}
