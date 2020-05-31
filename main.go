@@ -1,9 +1,17 @@
 package main
 
 import (
+	"log"
 	"net/http"
 
+	"github.com/fsunset/goBasicAPI/models"
 	"github.com/gin-gonic/gin"
+)
+
+const (
+	dbUser     = "twittAppClusterUser"
+	dbPassword = "twittAppClusterPass20"
+	dbCluster  = "twittappcluster-6ibps.mongodb.net"
 )
 
 func main() {
@@ -14,4 +22,8 @@ func main() {
 	})
 
 	server.Run()
+
+	if !models.CheckMongoDBConnection() {
+		log.Fatal("Error connecting with MongoDB")
+	}
 }
