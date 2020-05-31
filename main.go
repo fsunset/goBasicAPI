@@ -2,8 +2,9 @@ package main
 
 import (
 	"log"
-	"net/http"
 
+	"github.com/fsunset/goBasicAPI/controllers"
+	"github.com/fsunset/goBasicAPI/middlewares"
 	"github.com/fsunset/goBasicAPI/models"
 	"github.com/gin-gonic/gin"
 )
@@ -17,9 +18,10 @@ const (
 func main() {
 	server := gin.Default()
 
-	server.GET("/", func(ctx *gin.Context) {
-		ctx.JSON(http.StatusOK, gin.H{"response": "Hello World!"})
-	})
+	// Adding Middleware, will be used in all below routes
+	server.Use(middlewares.CheckStatusDB)
+
+	server.GET("/languages", controllers.FindAll)
 
 	server.Run()
 

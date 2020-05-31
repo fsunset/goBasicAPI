@@ -27,7 +27,6 @@ func connectionToDB() *mongo.Client {
 
 // CheckMongoDBConnection validates connection with DB
 func CheckMongoDBConnection() bool {
-	log.Println("entered to CheckMongoDBConnection...")
 	err := MongoConnection.Ping(context.TODO(), nil)
 	if err != nil {
 		log.Fatal("Cannot ping MongoDB connection: " + err.Error())
