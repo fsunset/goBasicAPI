@@ -1,12 +1,12 @@
 package controllers
 
 import (
-	"log"
 	"net/http"
 
 	"github.com/fsunset/goBasicAPI/models"
 	"github.com/gin-gonic/gin"
 	"go.mongodb.org/mongo-driver/bson"
+	"go.mongodb.org/mongo-driver/bson/primitive"
 )
 
 // "Global" var for the whole package
@@ -106,10 +106,10 @@ func ListLanguageByID(ctx *gin.Context) {
 	// Set correct structure for decoding query-result
 	var languageFound models.Language
 
-	log.Println(languageID)
+	objID, _ := primitive.ObjectIDFromHex(languageID)
 
 	// Querying...
-	err := collection.FindOne(ctx, bson.M{"_id": languageID}).Decode(&languageFound)
+	err := collection.FindOne(ctx, bson.M{"_id": objID}).Decode(&languageFound)
 	if err != nil {
 		ctx.JSON(http.StatusBadRequest, gin.H{
 			"Error: ": err.Error(),
