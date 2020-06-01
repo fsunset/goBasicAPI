@@ -9,12 +9,6 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-const (
-	dbUser     = "twittAppClusterUser"
-	dbPassword = "twittAppClusterPass20"
-	dbCluster  = "twittappcluster-6ibps.mongodb.net"
-)
-
 func main() {
 	// Starts server
 	server := gin.Default()
@@ -25,6 +19,7 @@ func main() {
 	// Set all API endpoints
 	server.GET("/languages/list", controllers.ListLanguages)
 	server.POST("/languages/new", controllers.CreateLanguage)
+	server.GET("/languages/list/:id", controllers.ListLanguageByID)
 
 	// Runs server so it listens for requests...
 	server.Run()

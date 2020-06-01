@@ -1,6 +1,7 @@
 package controllers
 
 import (
+	"log"
 	"net/http"
 
 	"github.com/fsunset/goBasicAPI/models"
@@ -94,5 +95,30 @@ func CreateLanguage(ctx *gin.Context) {
 
 	ctx.JSON(http.StatusOK, gin.H{
 		"result": insertedLanguage,
+	})
+}
+
+// ListLanguageByID shows info for single language
+func ListLanguageByID(ctx *gin.Context) {
+	// Get parameter from URL
+	languageID := ctx.Param("id")
+
+	// Set correct structure for decoding query-result
+	var languageFound models.Language
+
+	log.Println(languageID)
+
+	// Querying...
+	err := collection.FindOne(ctx, bson.M{"_id": languageID}).Decode(&languageFound)
+	if err != nil {
+		ctx.JSON(http.StatusBadRequest, gin.H{
+			"Error: ": err.Error(),
+		})
+
+		return
+	}
+
+	ctx.JSON(http.StatusOK, gin.H{
+		"result": languageFound,
 	})
 }
