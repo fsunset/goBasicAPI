@@ -17,10 +17,11 @@ func main() {
 	server.Use(middlewares.CheckStatusDB)
 
 	// Set all API endpoints
-	server.GET("/languages/list", controllers.ListLanguages)
-	server.POST("/languages/new", controllers.CreateLanguage)
-	server.GET("/languages/list/:id", controllers.ListLanguageByID)
-	server.PATCH("/languages/update/:id", controllers.UpdateLanguage)
+	server.GET("/languages", controllers.ListLanguages)
+	server.POST("/languages", controllers.CreateLanguage)
+	server.GET("/languages/:id", controllers.ListLanguageByID)
+	server.PATCH("/languages/:id", controllers.UpdateLanguage)
+	server.DELETE("/languages/:id", controllers.DeleteLanguage)
 
 	// Runs server so it listens for requests...
 	server.Run()

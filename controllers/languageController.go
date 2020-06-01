@@ -1,6 +1,7 @@
 package controllers
 
 import (
+	"log"
 	"net/http"
 
 	"github.com/fsunset/goBasicAPI/models"
@@ -12,7 +13,7 @@ import (
 // "Global" var for the whole package
 var collection = models.MongoConnection.Database("languagesDB").Collection("language")
 
-// ListLanguages returns all languages in DB
+// ListLanguages returns all Language-document in DB
 func ListLanguages(ctx *gin.Context) {
 	// Initialize slice to store ALL collection's documents returned by query. Must have correct "Language" structure
 	var allLanguages []models.Language
@@ -98,7 +99,7 @@ func CreateLanguage(ctx *gin.Context) {
 	})
 }
 
-// ListLanguageByID shows info for single language
+// ListLanguageByID shows Language-document info by ID
 func ListLanguageByID(ctx *gin.Context) {
 	// Get parameter from URL
 	languageID := ctx.Param("id")
@@ -123,9 +124,9 @@ func ListLanguageByID(ctx *gin.Context) {
 	})
 }
 
-// UpdateLanguage alters document info
+// UpdateLanguage alters Language-document info by ID
 func UpdateLanguage(ctx *gin.Context) {
-	// Search & find the document to edit
+	// Search the document to edit
 	// Get parameter from URL
 	languageID := ctx.Param("id")
 
@@ -176,5 +177,34 @@ func UpdateLanguage(ctx *gin.Context) {
 
 	ctx.JSON(http.StatusOK, gin.H{
 		"result": documentUpdated,
+	})
+}
+
+// DeleteLanguage removes Language-document by ID
+func DeleteLanguage(ctx *gin.Context) {
+	// Search the document to remove
+	// Get parameter from URL
+	languageID := ctx.Param("id")
+
+	// Set correct structure for decoding query-result
+	var languageFound models.Language
+	objID, _ := primitive.ObjectIDFromHex(languageID)
+
+	err := collection.FindOne(ctx, bson.M{"_id": objID}).Decode(&languageFound)
+	if err != nil {
+		ctx.JSON(http.StatusBadRequest, gin.H{
+			"Error: ": err.Error(),
+		})
+
+		return
+	}
+
+	_, err = collection.DeleteOne(ctx, bson.M{"_id": objID})
+	if err != nil {
+		log.Fatal(err.Error())
+	}
+
+	ctx.JSON(http.StatusOK, gin.H{
+		"result": true,
 	})
 }
