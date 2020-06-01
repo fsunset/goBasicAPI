@@ -8,7 +8,8 @@ import (
 	"go.mongodb.org/mongo-driver/mongo/options"
 )
 
-var clientOptions = options.Client().ApplyURI("mongodb+srv://twittAppClusterUser:twittAppClusterPass20@twittappcluster-6ibps.mongodb.net/test?retryWrites=true&w=majority")
+// var clientOptions = options.Client().ApplyURI("mongodb+srv://" + os.Getenv("dbUser") + ":" + os.Getenv("dbPassword") + "@" + os.Getenv("dbCluster"))
+var clientOptions = options.Client().ApplyURI("mongodb://127.0.0.1:27017")
 
 // MongoConnection connects with MongoDB
 var MongoConnection = connectionToDB()
