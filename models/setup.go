@@ -3,13 +3,12 @@ package models
 import (
 	"context"
 	"log"
-	"os"
 
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
 )
 
-var clientOptions = options.Client().ApplyURI("mongodb+srv://" + os.Getenv("dbUser") + ":" + os.Getenv("dbPassword") + "@" + os.Getenv("dbCluster"))
+var clientOptions = options.Client().ApplyURI("mongodb+srv://twittAppClusterUser:twittAppClusterPass20@twittappcluster-6ibps.mongodb.net/test?retryWrites=true&w=majority")
 
 // MongoConnection connects with MongoDB
 var MongoConnection = connectionToDB()
