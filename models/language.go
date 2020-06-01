@@ -9,8 +9,14 @@ type Language struct {
 	Creator string             `bson:"creator" json:"creator"`
 }
 
-// CreateLanguage handles creation of language-structure
-type CreateLanguage struct {
+// CreateLanguageInput handles creation of language-structure
+type CreateLanguageInput struct {
 	Name    string `bson:"name" json:"name" binding:"required"`
 	Creator string `bson:"creator" json:"creator" binding:"required"`
+}
+
+// UpdateLanguageInput handles updating of language-structure
+type UpdateLanguageInput struct {
+	Name    string `bson:"name" json:"name"`
+	Creator string `bson:"creator" json:"creator"`
 }

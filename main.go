@@ -20,6 +20,7 @@ func main() {
 	server.GET("/languages/list", controllers.ListLanguages)
 	server.POST("/languages/new", controllers.CreateLanguage)
 	server.GET("/languages/list/:id", controllers.ListLanguageByID)
+	server.PATCH("/languages/update/:id", controllers.UpdateLanguage)
 
 	// Runs server so it listens for requests...
 	server.Run()

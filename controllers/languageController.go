@@ -54,7 +54,7 @@ func ListLanguages(ctx *gin.Context) {
 // CreateLanguage inserts a new Language-document into DB
 func CreateLanguage(ctx *gin.Context) {
 	// Initialize correct structure
-	var newLanguageFromRequest models.CreateLanguage
+	var newLanguageFromRequest models.CreateLanguageInput
 
 	// Validates user's input data
 	err := ctx.ShouldBindJSON(&newLanguageFromRequest)
@@ -120,5 +120,61 @@ func ListLanguageByID(ctx *gin.Context) {
 
 	ctx.JSON(http.StatusOK, gin.H{
 		"result": languageFound,
+	})
+}
+
+// UpdateLanguage alters document info
+func UpdateLanguage(ctx *gin.Context) {
+	// Search & find the document to edit
+	// Get parameter from URL
+	languageID := ctx.Param("id")
+
+	// Set correct structure for decoding query-result
+	var languageFound models.Language
+	objID, _ := primitive.ObjectIDFromHex(languageID)
+
+	err := collection.FindOne(ctx, bson.M{"_id": objID}).Decode(&languageFound)
+	if err != nil {
+		ctx.JSON(http.StatusBadRequest, gin.H{
+			"Error: ": err.Error(),
+		})
+
+		return
+	}
+
+	// Validate data from user
+	var updateLanguageFromRequest models.UpdateLanguageInput
+
+	err = ctx.ShouldBindJSON(&updateLanguageFromRequest)
+	if err != nil {
+		ctx.JSON(http.StatusBadRequest, gin.H{
+			"Error: ": err.Error(),
+		})
+
+		return
+	}
+
+	// Create structure from user-input-data
+	updateLanguageData := make(map[string]string)
+
+	if len(updateLanguageFromRequest.Name) > 0 {
+		updateLanguageData["name"] = updateLanguageFromRequest.Name
+	}
+	if len(updateLanguageFromRequest.Creator) > 0 {
+		updateLanguageData["creator"] = updateLanguageFromRequest.Creator
+	}
+
+	updateData := bson.M{
+		"$set": updateLanguageData,
+	}
+
+	// Filter for "UpdateOne" function
+	filter := bson.M{"_id": bson.M{"$eq": objID}}
+
+	// Updating document
+	documentUpdated, err := collection.UpdateOne(ctx, filter, updateData)
+
+	ctx.JSON(http.StatusOK, gin.H{
+		"result": documentUpdated,
 	})
 }
